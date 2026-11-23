@@ -1,108 +1,37 @@
 # RPG Maker 游戏启动器（Desktop）
 
-基于 NW.js 的游戏启动管理工具，支持绝大多数 RPG Maker 制作的游戏。
-
-公共规则与算法已提取到 [RPGManager-Core](https://github.com/DearXuan7392/RPGManager-Core)，
-并以 git submodule 形式挂在本仓库的 `core/` 目录；`menu/` 只保留 NW.js 宿主与界面逻辑。
-
-## 代码结构
-
-| 路径 | 说明 |
-| --- | --- |
-| `menu/` | NW.js 菜单页、卡片、注入器、存档编辑器 |
-| `core/` | git submodule：`RPGManager-Core`，解密/扫描/批量任务/存档/MIME 等公共函数 |
-| `games/` | 游戏目录，不入库；本机可用目录联接指向实际存放位置 |
-| `assets/` | README 截图 |
-
-## 获取源码
-
-```bash
-git clone --recurse-submodules git@github.com:DearXuan7392/RPGManager-Desktop.git
-cd RPGManager-Desktop
-
-# 已克隆但没带子模块时
-git submodule update --init --recursive
-```
-
-NW.js 运行时二进制不入库，请按下面的步骤自行下载解压。
+基于 NW.js 的 RPG Maker 游戏启动工具。公共逻辑在 [RPGManager-Core](https://github.com/DearXuan7392/RPGManager-Core) 子模块 `core/`。
 
 ## 功能
 
-- 游戏启动管理
+- 游戏启动与管理
 - 控制台调试
-- 资源解密
+- 资源解密与完整解密副本
+- 存档备份与在线编辑
 
-## 如何使用
+## 获取与使用
 
-1. 将本项目下载到本地.
-2. 前往[https://nwjs.io/](https://nwjs.io/) 下载 NW.js 桌面版, 推荐下载 SDK 版本.
-3. 解压下载后的压缩包至本项目目录, 确保 ``nw.exe`` 与 ``package.json``, ``menu/`` 同级.
-4. 双击 ``nw.exe`` 启动项目，会自动创建 ``games`` 文件夹。若游戏存在其他磁盘，可把它改为目录联接：``mklink /J games D:\path\to\games``。
-5. 将 RPG 游戏的 ``www`` 文件夹复制到 ``games`` 文件夹中，并命名为游戏名称。
-6. 再次双击 ``nw.exe`` 启动项目, 即可在启动器中查看游戏列表.
-
-## 支持的功能
-
-### 控制台调试
-
-拦截游戏对开发环境的检测, 屏蔽 ``exit()`` 函数与一些监听事件, 伪造可信环境. 可使用 ``F12`` 打开控制台, 并执行任意 JavaScript 代码, 以实现自定义修改, 例如修改金钱、HP 等.
-
-例如以下代码可以修改全角色生命值:
-```js
-$gameParty.members().forEach(actor => actor._hp = 999999);
+```bash
+git clone --recurse-submodules git@github.com:DearXuan7392/RPGManager-Desktop.git
 ```
 
-| 控制台调试 |
-|:--------:|
-| ![控制台调试](assets/console.png) |
-| ![修改 HP](assets/changeHp.png) |
+已克隆但未带子模块时：
 
-### 存档编辑 (网页)
+```bash
+git submodule update --init --recursive
+```
 
-右键游戏卡片, 可快速打开网页版游戏档编辑器, 自行上传存档进行编辑.
-
-### 资源解密
-
-自动查找密钥，并解密游戏目录下 ``img`` 文件夹中的全部文件至 ``decrypt_img`` 文件夹；若未加密，则转而直接打开 ``img`` 文件夹。也可以右键游戏卡片克隆一份完整解密副本（原名加 ``-解密``），副本里的 ``System.json`` 会被标记为未加密，可直接游玩。
-
-|              解密前              |                 解密后(可正常打开)                 |
-|:-----------------------------:|:-----------------------------------:|
-| ![解密前](assets/dec_before.png) | ![解密后](assets/dec_after.png) |
+1. 下载 NW.js SDK 版，解压到项目根目录，使 `nw.exe` 与 `package.json`、`menu/` 同级。
+2. 启动 `nw.exe`，生成 `games` 目录。可用 `mklink /J games D:\path\to\games` 指向其他位置。
+3. 将游戏目录复制到 `games/<游戏名>/`，目录需包含 `index.html`（或 `www/index.html`）。
+4. 重新启动 `nw.exe`，从列表打开游戏。
 
 ## 常见问题
 
-### 游戏目录下没有 ``www`` 文件夹
+### 没有 www 文件夹
 
-部分游戏直接将资源放在根目录, 请检查是否存在下列文件或文件夹:
+部分游戏资源直接在根目录。只要包含 `index.html`、`data/`、`img/`、`js/` 等，可直接复制为 `games/<游戏名>/`。
 
-```
-game_root/
-    ├── audio/
-    ├── data/
-    ├── fonts/
-    ├── icon/
-    ├── img/
-    ├── js/
-    ├── save/
-    ├── index.html
-    └── package.json
-```
+### 提示文件不存在
 
-若存在, 直接将这些文件复制到 ``games/<game_name>/`` 中, 即可正常启动游戏. 部分游戏可能有更多的资源文件, 请自行检查与尝试.
-
-若不存在, 说明该游戏可能并非 RPG Maker 游戏.
-
-### 提示找不到某某文件, 但文件实际上存在
-
-大概率是游戏拥有严格的作弊检测, 如某游戏会检测窗口大小, 启动器大小, 特征码等, 仅仅是切换启动器便会触发检测. 检测机制通常会捆绑在正常代码中, 难以自动化去除.
-
-故障原因:
-
-> 检测代码通常会包含在资源加载代码中, 并在检测到异常情况时, 通过 ``process.exit()`` 结束游戏, 但由于启动器拦截了该函数, 导致游戏无法主动关闭. 而资源加载又因此中断, 故提示找不到某某文件, 但文件实际上存在.
-
-推荐的解决方法: 
-
-1. 在游戏文件中检索 ``process.exit`` 字符串, 正常游戏流程中不应该出现该调用, 一般仅用于检测到作弊时退出游戏.
-2. 将该函数所在的代码或完整函数发给 AI (推荐 Gemini), 提示词如下: 
-> 我尝试使用 nw.js 启动 RPG Maker 制作的游戏, 但游戏中存在对调试环境的检测, 例如检测控制台是否启动, 某个自定义字段是否符合等. 请你阅读这段代码, 告诉我这段代码实现了什么功能, 以及它是如何实现检测的. 随后, 请尝试只删掉检测的部分, 保留必要的代码, 以确保游戏的正常运行. 代码如下: \<code\>
-3. 根据 AI 回复, 替换游戏文件中的检测代码.
+部分游戏带反调试检测，通常调用 `process.exit`。检索相关代码后删除检测逻辑。
