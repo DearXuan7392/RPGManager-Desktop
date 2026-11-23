@@ -14,16 +14,8 @@
  * nodeFs / nodePath 由 index.html 的内联脚本提供，这里不要重复声明。
  */
 
-// 应用根目录：要在 process.chdir / execPath 被改写之前先取好
-const APP_ROOT = (function () {
-    try {
-        return nodePath.dirname(process.execPath);
-    } catch (e) {
-        return process.cwd();
-    }
-})();
-
-const CHEAT_SCRIPT_URL = 'file:///' + nodePath.join(APP_ROOT, 'menu', 'cheat.js').replace(/\\/g, '/');
+// 作弊载荷由 Core 统一提供；这里用一次性内联 require，避免与 menu.js 的顶层 const core 冲突
+const CHEAT_SCRIPT_URL = 'file:///' + require('../core').cheatScriptPath('desktop').replace(/\\/g, '/');
 
 const INJECT_INTERVAL = 200;   // 看护间隔
 const INJECT_RETRY_GAP = 1500; // 注入失败后的重试间隔

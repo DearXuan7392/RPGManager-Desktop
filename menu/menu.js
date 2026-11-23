@@ -1,7 +1,6 @@
 // menu.js
 const nwGui = require('nw.gui');
 const { exec } = require('child_process');
-const core = require('../core');
 
 let rightClickedGamePath = null;
 

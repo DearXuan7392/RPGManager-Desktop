@@ -1,5 +1,5 @@
 // saveEditor.js
-const core = require('../core');
+// core 由 index.html 内联脚本统一声明，避免多个经典脚本重复 const 冲突
 
 let currentGamePath = null;       // 当前游戏根目录
 let currentSavePath = null;       // 当前正在编辑的游戏 save 文件夹绝对路径
