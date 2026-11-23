@@ -25,21 +25,14 @@ function scanGames() {
         nodeFs.mkdirSync(GAMES_DIR);
     }
 
-    const files = nodeFs.readdirSync(GAMES_DIR);
-    let hasGame = false;
+    const games = require('../core').scanGames(GAMES_DIR);
     gameListContainer.innerHTML = '';
 
-    files.forEach(file => {
-        const gamePath = nodePath.join(GAMES_DIR, file);
-        const isDir = nodeFs.statSync(gamePath).isDirectory();
-
-        if (isDir && nodeFs.existsSync(nodePath.join(gamePath, 'index.html'))) {
-            hasGame = true;
-            createGameCard(file, gamePath);
-        }
+    games.forEach(game => {
+        createGameCard(game.name, game.root);
     });
 
-    if (!hasGame) {
+    if (games.length === 0) {
         gameListContainer.innerHTML = '<p id="no-games">未在 games 文件夹下找到有效的 RPG Maker 游戏 (目录需包含 index.html)</p>';
     }
 }

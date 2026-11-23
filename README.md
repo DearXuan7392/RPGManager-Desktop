@@ -1,6 +1,30 @@
-# RPG Maker 游戏启动器
+# RPG Maker 游戏启动器（Desktop）
 
-基于 NW.js 的游戏启动管理工具, 支持绝大多数 RPG Maker 制作的游戏.
+基于 NW.js 的游戏启动管理工具，支持绝大多数 RPG Maker 制作的游戏。
+
+公共规则与算法已提取到 [RPGManager-Core](https://github.com/DearXuan7392/RPGManager-Core)，
+并以 git submodule 形式挂在本仓库的 `core/` 目录；`menu/` 只保留 NW.js 宿主与界面逻辑。
+
+## 代码结构
+
+| 路径 | 说明 |
+| --- | --- |
+| `menu/` | NW.js 菜单页、卡片、注入器、存档编辑器 |
+| `core/` | git submodule：`RPGManager-Core`，解密/扫描/批量任务/存档/MIME 等公共函数 |
+| `games/` | 游戏目录，不入库；本机可用目录联接指向实际存放位置 |
+| `assets/` | README 截图 |
+
+## 获取源码
+
+```bash
+git clone --recurse-submodules git@github.com:DearXuan7392/RPGManager-Desktop.git
+cd RPGManager-Desktop
+
+# 已克隆但没带子模块时
+git submodule update --init --recursive
+```
+
+NW.js 运行时二进制不入库，请按下面的步骤自行下载解压。
 
 ## 功能
 
@@ -13,8 +37,8 @@
 1. 将本项目下载到本地.
 2. 前往[https://nwjs.io/](https://nwjs.io/) 下载 NW.js 桌面版, 推荐下载 SDK 版本.
 3. 解压下载后的压缩包至本项目目录, 确保 ``nw.exe`` 与 ``package.json``, ``menu/`` 同级.
-4. 双击 ``nw.exe`` 启动项目, 会自动创建 ``games`` 文件夹.
-5. 将 RPG 游戏的 ``www`` 文件夹复制到 ``games`` 文件夹中, 并命名为游戏名称.
+4. 双击 ``nw.exe`` 启动项目，会自动创建 ``games`` 文件夹。若游戏存在其他磁盘，可把它改为目录联接：``mklink /J games D:\path\to\games``。
+5. 将 RPG 游戏的 ``www`` 文件夹复制到 ``games`` 文件夹中，并命名为游戏名称。
 6. 再次双击 ``nw.exe`` 启动项目, 即可在启动器中查看游戏列表.
 
 ## 支持的功能
@@ -39,7 +63,7 @@ $gameParty.members().forEach(actor => actor._hp = 999999);
 
 ### 资源解密
 
-自动查找密钥, 并解密游戏目录下 ``img`` 文件夹中的全部文件至 ``img_decrypt`` 文件夹. 若未加密, 则转而直接打开 ``img`` 文件夹.
+自动查找密钥，并解密游戏目录下 ``img`` 文件夹中的全部文件至 ``decrypt_img`` 文件夹；若未加密，则转而直接打开 ``img`` 文件夹。也可以右键游戏卡片克隆一份完整解密副本（原名加 ``-解密``），副本里的 ``System.json`` 会被标记为未加密，可直接游玩。
 
 |              解密前              |                 解密后(可正常打开)                 |
 |:-----------------------------:|:-----------------------------------:|

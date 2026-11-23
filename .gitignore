@@ -1,1 +1,31 @@
 games
+
+# IDE / 编辑器本地配置
+.idea/
+.trae/
+
+# NW.js 运行时按 README 自行下载，不入库
+/chromedriver.exe
+/credits.html
+/d3dcompiler_47.dll
+/dxcompiler.dll
+/dxil.dll
+/ffmpeg.dll
+/icudtl.dat
+/libEGL.dll
+/libGLESv2.dll
+/libvk_swiftshader.dll
+/locales/
+/node.dll
+/notification_helper.exe
+/nw.dll
+/nw_elf.dll
+/nw.exe
+/nw_100_percent.pak
+/nw_200_percent.pak
+/nwjc.exe
+/resources.pak
+/v8_context_snapshot.bin
+/vulkan-1.dll
+/vk_swiftshader.dll
+/vk_swiftshader_icd.json
